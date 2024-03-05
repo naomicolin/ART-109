@@ -1,0 +1,106 @@
+/*
+CSS RESETS:
+ Border box reset:
+https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+ 62.5% Fix: https: //www.aleksandrhovhannisyan.com/blog/62-5-percent-font-size-trick/
+*/
+
+
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+ }
+ 
+ 
+ *,
+ *:before,
+ *:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+ }
+ 
+ 
+ html,
+ body {
+    height: 100%;
+ }
+ 
+ 
+ body {
+     font-size: 100px;
+     /* //////UNHIGHLIGHT THIS PART FOR BG ANIMATION ///////// */
+     animation-name: bgcolor;
+     animation-duration: 7s;
+     animation-iteration-count: infinite;
+     animation-direction: reverse;
+     animation-fill-mode: backwards;
+     -ms-zoom-animation: default;
+
+   }
+     
+     
+   
+
+ @keyframes stretching {
+    0% {
+      width: 200px;
+      
+    
+    }
+    100% {
+      width: 1000px;
+    }
+  }
+
+
+  @keyframes bgcolor {
+    0% {
+        background-color: rgba(2,0,36,1);
+    
+    }
+    5% {
+        background-color: rgba(9,121,27,1); 
+        
+
+    }
+
+    20% {
+        background-color: rgb(37, 217, 67); 
+        
+
+    }
+
+    30% {
+      background-color: rgba(0,212,255,1);
+    }
+  }
+
+
+  
+  
+  .button {
+    display: inline-block;
+    background-color: rgb(55, 184, 61);
+    animation-name: stretching;
+    animation-duration: 7s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    animation-fill-mode: backwards;
+    -ms-zoom-animation: default;
+  }
+
+
+  .button2 {
+    display: inline-block;
+    background-color: rgb(206, 49, 99);
+    animation-name: stretching;
+    animation-duration: 7s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    animation-fill-mode: backwards;
+    -ms-zoom-animation: default;
+  }
+  
+ 
