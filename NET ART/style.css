@@ -1,0 +1,137 @@
+/*
+CSS RESETS:
+ Border box reset:
+https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+ 62.5% Fix: https: //www.aleksandrhovhannisyan.com/blog/62-5-percent-font-size-trick/
+*/
+
+
+
+html {
+    box-sizing: border-box;
+    font-size: 70%;
+ }
+ 
+ 
+ *,
+ *:before,
+ *:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+ }
+ 
+ 
+ html,
+ body {
+    height: 100%;
+ }
+ 
+ 
+ body {
+     font-size: 100px;
+     /* //////UNHIGHLIGHT THIS PART FOR BG ANIMATION ///////// */
+     animation-name: bgcolor;
+     animation-duration: 20s;
+     animation-iteration-count: infinite;
+     animation-direction: reverse;
+     animation-fill-mode: backwards;
+     -ms-zoom-animation: default;
+
+   }
+     
+     
+   
+
+ @keyframes stretching {
+    0% {
+      width: 1000px;
+      
+    
+    }
+    100% {
+      width: 1000px;
+    }
+  }
+
+
+  @keyframes bgcolor {
+    0% {
+        background-color: #75f55e;
+    
+    }
+    5% {
+        background-color: #58d343; 
+        
+
+    }
+
+    10% {
+      background-color: #21a809; 
+      
+
+  }
+
+
+    20% {
+        background-color: rgb(55, 237, 234); 
+        
+
+    }
+
+    30% {
+      background-color: rgb(20, 154, 181);
+    }
+
+    40% {
+      background-color: rgb(205, 246, 73);
+    }
+
+    50% {
+      background-color: rgb(248, 108, 238);
+    }
+
+    60% {
+      background-color: rgb(232, 83, 123);
+    }
+    70% {
+      background-color: rgb(158, 109, 249);
+    }
+    80% {
+      background-color: rgb(232, 52, 172);
+    }
+    90% {
+      background-color: rgb(231, 119, 175);
+    }
+    100% {
+      background-color: rgb(239, 161, 89);
+    }
+  }
+
+
+  
+  
+  .button {
+    display: inline-block;
+    background-color: rgb(55, 184, 61);
+    animation-name: stretching;
+    animation-duration: 7s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    animation-fill-mode: backwards;
+    -ms-zoom-animation: default;
+  }
+
+
+  .button2 {
+    display: inline-block;
+    background-color: rgb(206, 49, 99);
+    animation-name: stretching;
+    animation-duration: 7s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    animation-fill-mode: backwards;
+    -ms-zoom-animation: default;
+  }
+  
+ 
