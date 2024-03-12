@@ -160,27 +160,51 @@ html {
 
   
   
-  .button {
-    display: inline-block;
+  .marquee {
+    padding: 1px;
+    padding-top: 90px;
+    padding-bottom: 1px;
+    
     background-color: rgb(55, 184, 61);
     animation-name: stretching;
-    animation-duration: 7s;
+    animation-duration: 60s;
     animation-iteration-count: infinite;
     animation-direction: reverse;
-    animation-fill-mode: backwards;
-    -ms-zoom-animation: default;
+    animation-fill-mode: forwards;
+    
   }
 
-
-  .button2 {
-    display: inline-block;
-    background-color: rgb(206, 49, 99);
-    animation-name: stretching;
-    animation-duration: 50s;
-    animation-iteration-count: infinite;
-    animation-direction: reverse;
-    animation-fill-mode: both, forwards, none;
-    -ms-zoom-animation: default;
-  }
   
+ header {
+  padding-left: 1110px;
+ }
+
+ h2 {
+  padding-top: 1px;
  
+  
+ }
+
+ h3 {
+  padding-bottom: 180px;
+  
+ }
+
+ .image-div{
+  display: inline-block;
+  position: absolute;
+  /* top: 400px;
+  right: 50px; */
+  
+}
+
+#mood {
+  bottom: 1px;
+  left: 900px;
+}
+
+#mood2 {
+  top: 980px;
+  right: 80px;
+  bottom: 200px;
+}
