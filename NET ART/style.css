@@ -124,7 +124,7 @@ body {
 
 
 header {
-padding-left: 1110px;
+padding-left: 700px;
 }
 
 h2 {
@@ -148,11 +148,15 @@ right: 50px; */
 
 #mood {
 bottom: 1px;
-left: 900px;
+top: 310px;
+left: 500px;
 }
 
 #mood2 {
 top: 980px;
-right: 80px;
+right: 1px;
 bottom: 200px;
 }
+
+
+

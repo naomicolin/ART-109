@@ -8,6 +8,10 @@ document.querySelector("#mood2").addEventListener("click", function(){
     document.querySelector("#mood2").style.visibility = "hidden";
 })
 
+document.querySelector("#mood3").addEventListener("click", function(){
+    document.querySelector("#mood3").style.visibility = "hidden";
+})
+
 
 
 
