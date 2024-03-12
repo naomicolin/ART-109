@@ -1,0 +1,82 @@
+/*
+CSS RESETS:
+ Border box reset:
+https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+ 62.5% Fix: https: //www.aleksandrhovhannisyan.com/blog/62-5-percent-font-size-trick/
+*/
+
+html {
+   box-sizing: border-box;
+   font-size: 62.5%;
+}
+
+*,
+*:before,
+*:after {
+   box-sizing: inherit;
+   margin: 0;
+   padding: 0;
+}
+
+html,
+body {
+   height: 100%;
+}
+
+body {
+   font-size: 1.6rem;
+   padding: 20px;
+   /* font-size 1.6rem is now the same as 16px */
+   line-height: 1.6;
+   background-color: rgb(0, 0, 0);
+}
+
+header {
+   padding: 20px;
+   font-size: 50px;
+   background-color: rgb(24, 161, 11);
+   text-align: center;
+}
+
+
+
+
+/* /////UPLOADED FONTS FROM DAFONT.COM//// */
+ 
+ 
+@font-face {
+   font-family: 'marola';
+   src: url('FONTS/marola.TTF') format('opentype');
+ }
+
+
+
+main {
+   max-width: 800px;
+   margin: 50px auto;
+}
+
+
+
+.image-div{
+   display: inline-block;
+   position: absolute;
+   /* top: 400px;
+   right: 50px; */
+   
+}
+
+#monster1 {
+   top: 170px;
+   left: 500px;
+}
+
+#monster2 {
+   top: 480px;
+   right: 70px;
+}
+
+#monster3 {
+   top: 350px;
+   left: 90px;
+}
