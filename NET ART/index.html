@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="@font">
 
+
+     <!-- Inline CSS for background color transition -->
+     <style>
+        body {
+            transition: background-color 1s ease; /* Add a smooth transition effect */
+        }
+    </style>
+
+
+
+
 </head>
 
 
@@ -44,7 +55,28 @@
     
     
 
-    
+    <!-- JavaScript for dynamic background color -->
+    <script>
+        function updateBackgroundColor() {
+            var now = new Date();
+            var hour = now.getHours() % 12 || 12; // Get current hour in 12-hour format
+
+            /////        1AM/PM YELLOW          2AM/PM TEAL           3AM/PM GREEN       4AM/PM ORANGE        5AM/PM BUBBLE PINK    6AM/PM CORAL PINK    7AM/PM PURP         8AM/PM MIDBLUE     9AM/PM DARK RED     10AM/PM PEACH       11AM/PM NEON GREEN   12AM/PM HOT PINK!      
+            var colors = ['rgb(187, 230, 54)', 'rgb(55, 237, 234)', 'rgb(29, 192, 91)', 'rgb(246, 126, 73)', 'rgb(248, 108, 238)', 'rgb(232, 83, 123)', 'rgb(92, 45, 181)', 'rgb(22, 7, 168)', 'rgb(183, 28, 46)', 'rgb(239, 161, 89)', 'rgb(70, 190, 11)', 'rgb(200, 16, 146)'];
+            var color = colors[hour - 1]; // Select color based on the hour
+
+            document.body.style.backgroundColor = color;
+
+            console.log("Current hour: " + hour);
+        }
+
+        // Call the function to update background color initially
+        updateBackgroundColor();
+
+        // Update background color every hour
+        setInterval(updateBackgroundColor, 3600000); // Update every hour (3600000 milliseconds)
+    </script>
+
     
 
     
