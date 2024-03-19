@@ -33,7 +33,7 @@ body {
 
 header {
    padding: 20px;
-   font-size: 50px;
+   font-size: 0px;
    background-color: rgb(24, 161, 11);
    text-align: center;
 }
@@ -67,8 +67,8 @@ main {
 }
 
 #monster1 {
-   top: 170px;
-   left: 500px;
+   top: 210px;
+   left: 645px;
 }
 
 #monster2 {
@@ -79,4 +79,9 @@ main {
 #monster3 {
    top: 350px;
    left: 90px;
+}
+
+#monster4 {
+   top: 550px;
+   right: 550px;
 }
