@@ -26,7 +26,11 @@ renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry(2, 2, 2);
+
+
+/////SPHERE CODE//////
+
+const geometry = new THREE.SphereGeometry(15, 32, 16);
 
 /////SOLID BASE COLOR
 // const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
@@ -34,7 +38,7 @@ const geometry = new THREE.BoxGeometry(2, 2, 2);
 
 
 //////UPLOAD TEXTURE MATERIAL
-const texture = new THREE.TextureLoader().load('textures/white.png');
+const texture = new THREE.TextureLoader().load('textures/lava.webp');
 const material = new THREE.MeshBasicMaterial( { map: texture });
 
 
@@ -48,6 +52,9 @@ camera.position.z = 5;
 
 
 }
+
+
+
 
 
 
@@ -83,6 +90,11 @@ animate();
 // ~~~~~~~~~~~~~~~~ Initiate add-ons ~~~~~~~~~~~~~~~~
 const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new GLTFLoader(); // to load 3d models
+
+loader.load('3js code/HAPPY FACE.gltf', function(gltf)){
+    const happy = gltf.scene;
+    scene.add(happy);
+}
 
 
 // →→→→→→ Follow next steps in tutorial: // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
