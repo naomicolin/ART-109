@@ -27,7 +27,19 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const geometry = new THREE.BoxGeometry(2, 2, 2);
-const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
+
+/////SOLID BASE COLOR
+// const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
+///////////////
+
+
+//////UPLOAD TEXTURE MATERIAL
+const texture = new THREE.TextureLoader().load('images/GREENMESH.png');
+const material = new THREE.MeshBasicMaterial( { map: texture });
+
+
+///////////////
+
 cube = new THREE.Mesh( geometry, material );
 scene.add( cube ); 
 
