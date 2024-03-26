@@ -17,6 +17,12 @@ let scene, camera, renderer, cube;
 function init () {
 
 scene = new THREE.Scene();
+
+const light = new THREE.directionalLight(0xffffff, 3);
+light.position.set(1, 1, 5);
+scene.add(light);
+
+ 
 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 
@@ -30,22 +36,29 @@ document.body.appendChild(renderer.domElement);
 
 /////SPHERE CODE//////
 
-const geometry = new THREE.SphereGeometry(15, 32, 16);
+// const geometry = new THREE.SphereGeometry(15, 32, 16);
 
-/////SOLID BASE COLOR
-// const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
-///////////////
-
-
-//////UPLOAD TEXTURE MATERIAL
-const texture = new THREE.TextureLoader().load('textures/lava.webp');
-const material = new THREE.MeshBasicMaterial( { map: texture });
+// /////SOLID BASE COLOR
+// // const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
+// ///////////////
 
 
-///////////////
+// //////UPLOAD TEXTURE MATERIAL
+// const texture = new THREE.TextureLoader().load('textures/lava.webp');
+// const material = new THREE.MeshBasicMaterial( { map: texture });
 
-cube = new THREE.Mesh( geometry, material );
-scene.add( cube ); 
+
+
+
+// cube = new THREE.Mesh( geometry, material );
+// scene.add( cube ); 
+
+///////////////////////////////////////////////////////////////////////////
+
+
+
+
+////////CAMERA POSITION ////////
 
 camera.position.z = 5;
 
@@ -64,8 +77,8 @@ camera.position.z = 5;
 function animate() {
     requestAnimationFrame(animate);
 
-    cube.rotation.x += 0.02;
-    cube.rotation.y += 0.02;
+    // cube.rotation.x += 0.02;
+    // cube.rotation.y += 0.02;
 
 
     renderer.render(scene, camera);
