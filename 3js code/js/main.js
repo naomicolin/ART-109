@@ -91,10 +91,10 @@ animate();
 const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new GLTFLoader(); // to load 3d models
 
-loader.load('3js code/HAPPY FACE.gltf', function(gltf)){
+loader.load('3js code/assets/HAPPY', function (gltf){
     const happy = gltf.scene;
     scene.add(happy);
-}
+})
 
 
 // →→→→→→ Follow next steps in tutorial: // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
