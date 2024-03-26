@@ -34,7 +34,7 @@ const geometry = new THREE.BoxGeometry(2, 2, 2);
 
 
 //////UPLOAD TEXTURE MATERIAL
-const texture = new THREE.TextureLoader().load('textures/grass.png');
+const texture = new THREE.TextureLoader().load('textures/grass.jpeg');
 const material = new THREE.MeshBasicMaterial( { map: texture });
 
 
