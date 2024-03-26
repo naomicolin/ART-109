@@ -36,22 +36,22 @@ document.body.appendChild(renderer.domElement);
 
 /////SPHERE CODE//////
 
-// const geometry = new THREE.SphereGeometry(15, 32, 16);
+const geometry = new THREE.SphereGeometry(15, 32, 16);
 
-// /////SOLID BASE COLOR
-// // const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
-// ///////////////
-
-
-// //////UPLOAD TEXTURE MATERIAL
-// const texture = new THREE.TextureLoader().load('textures/lava.webp');
-// const material = new THREE.MeshBasicMaterial( { map: texture });
+/////SOLID BASE COLOR
+// const material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
+///////////////
 
 
+//////UPLOAD TEXTURE MATERIAL
+const texture = new THREE.TextureLoader().load('textures/lava.webp');
+const material = new THREE.MeshBasicMaterial( { map: texture });
 
 
-// cube = new THREE.Mesh( geometry, material );
-// scene.add( cube ); 
+
+
+cube = new THREE.Mesh( geometry, material );
+scene.add( cube ); 
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -77,8 +77,8 @@ camera.position.z = 5;
 function animate() {
     requestAnimationFrame(animate);
 
-    // cube.rotation.x += 0.02;
-    // cube.rotation.y += 0.02;
+    cube.rotation.x += 0.02;
+    cube.rotation.y += 0.02;
 
 
     renderer.render(scene, camera);
