@@ -1,117 +1,301 @@
-// Basic Three.JS scene from documentation, importing Three.JS through a CDN
-// https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
-
-// Import Three.js (also linked to as import map in HTML)
+///IMPORTS THE ENTIRE THREE.JS LIBRARY AND ASSIGNS IT TO VARIABLE
 import * as THREE from 'three';
+            ///IMPORTS THE STAT.JS LIBRARY FOR PERFORMANCE
+			import Stats from 'three/addons/libs/stats.module.js';
+            ///IMPORTS GUI MODULE
+            import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+            ///IMPORTS ORBITCONTROLS MODULE FOR CAMERA CONTROL
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// Import add-ons
-import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
+			
+            /////DECLARING GLOBAL VARIABLES/////
+            let camera, scene, renderer, startTime, object, stats;
 
-///////CREATE SCENE //////////////////
-let scene, camera, renderer, sphere, cowboy, happy;
-let sceneContainer = document.querySelector("#scene-container");
+            /////CALLING YOUR FUNCTIONS AND INITIALIZING THEM
+			init();
+			animate();
 
-let mixer;
 
-function init() {
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 1000);
+            //////INITIALIZATION FUNCTION, CREATES YOUR SCENE/////
+			function init() {
 
-    renderer = new THREE.WebGLRenderer({ antialias: true }); ///THE VIEWPORT
-    renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
-    sceneContainer.appendChild(renderer.domElement);
+				camera = new THREE.PerspectiveCamera( 36, window.innerWidth / window.innerHeight, 0.25, 16 );
 
-    /////ADDING LIGHTENING RIGHT
-    const lightRight = new THREE.DirectionalLight(0xFF69B4, 3);
-    lightRight.position.set(5, 10, 5); // Adjust position
-    scene.add(lightRight);
+				camera.position.set( 0, 1.3, 3 );
 
-    /////ADDING LIGHTENING LEFT
-    const lightLeft = new THREE.DirectionalLight(0xFF69B4, 3);
-    lightLeft.position.set(-5, 10, -5); // Adjust position
-    scene.add(lightLeft);
+				scene = new THREE.Scene();
 
-    //////SPHERE CODE ////////////////
-    const sphereGeometry = new THREE.SphereGeometry(15, 32, 16);
-    const sphereTexture = new THREE.TextureLoader().load('textures/pink.jpg');
-    const sphereMaterial = new THREE.MeshBasicMaterial({ map: sphereTexture });
-    sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    scene.add(sphere);
-    // sphere.position.x = -20; // Adjust x 
+				// LIGHTS ////////
 
-    /////////CAMERA POSITION////////////////
-    camera.position.z = 50;
-}
+				scene.add( new THREE.AmbientLight( 0xcccccc ) );
 
-function animate() {
-    requestAnimationFrame(animate);
+				///ADDING SPOTLIGHT LIGHT/////
+                const spotLight = new THREE.SpotLight( 0xffffff, 60 );
+				spotLight.angle = Math.PI / 5;
+				spotLight.penumbra = 0.2; ///PENUMBRA IS SHADED OUTER REGION OF A SHADOW CAST 
+				spotLight.position.set( 2, 3, 3 );
+				spotLight.castShadow = true;
+				spotLight.shadow.camera.near = 3;
+				spotLight.shadow.camera.far = 10;
+				spotLight.shadow.mapSize.width = 1024;
+				spotLight.shadow.mapSize.height = 1024;
+				scene.add( spotLight );
 
-    sphere.rotation.x += 0.007;
-    sphere.rotation.y += 0.007;
+				///ADDING DIRECTIONAL LIGHT/////
+                const dirLight = new THREE.DirectionalLight( 0x55505a, 3 );
+				dirLight.position.set( 0, 3, 0 );
+				dirLight.castShadow = true;
+				dirLight.shadow.camera.near = 1;
+				dirLight.shadow.camera.far = 10;
 
-    sphere.position.x = Math.sin(Date.now() / 2000) * 4;
-    sphere.position.y = Math.sin(Date.now() / 4000) * 4;
-    sphere.position.z = Math.sin(Date.now() / 5000) * 4;
+				dirLight.shadow.camera.right = 1;
+				dirLight.shadow.camera.left = - 1;
+				dirLight.shadow.camera.top	= 1;
+				dirLight.shadow.camera.bottom = - 1;
 
-    if (happy) {
-        happy.rotation.x += 0.007;
-        happy.rotation.y += 0.007;
-        happy.position.y = Math.sin(Date.now() / 500) * 0.5;
-    }
-
-    if (cowboy) {
-        cowboy.position.y = -25;
-        cowboy.position.x = -25;
-    }
-
-    if (mixer) {
-        mixer.update(); // Update animations
-    }
-
-    renderer.render(scene, camera);
-}
-
-function onWindowResize() {
-    camera.aspect = sceneContainer.clientWidth / sceneContainer.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
-}
-
-window.addEventListener('resize', onWindowResize, false);
-
-init();
-animate();
-
-//////ADD ONS / 3D MODEL ////////////////
-const controls = new OrbitControls(camera, renderer.domElement);
-const loader = new GLTFLoader(); // to load 3d models
-loader.load('assets/COWBOY.gltf', function (gltf) {
-    const cowboy = gltf.scene;
-    scene.add(cowboy);
-    mixer = new THREE.AnimationMixer(cowboy); 
-    const clips = gltf.animations;
-    const clip = THREE.AnimationClip.findByName(clips, 'COWBOY');
-    if (clip) {
-        const action = mixer.clipAction(clip);
-        action.play();
-    } else {
-        console.error('Animation clip not found in the loaded model:', gltf);
-    }
-}, undefined, function (error) {
-    console.error('Error loading the cowboy model:', error);
-});
-
-    
+				dirLight.shadow.mapSize.width = 1024;
+				dirLight.shadow.mapSize.height = 1024;
+				scene.add( dirLight );
 
 
 
+				// ***** Clipping planes: *****
+
+				//////CLIPS GEOMETRY, ALLOWING YOU TO CONTROL WHICH PARTS OF THE GEOMETRY IS RENDERED/CLIPPED /////////
+                const localPlane = new THREE.Plane( new THREE.Vector3( 0, - 1, 0 ), 0.8 );
+				const globalPlane = new THREE.Plane( new THREE.Vector3( - 1, 0, 0 ), 0.1 );
+
+				
+                
+                ///////GEOMETRY///////
+
+                //////THIS SETUP CONFIGURES THE MATERIAL TO INTERACT WITH CLIPPING PLANES, CAST SHADOWS WHEN CLIPPED
+				const material = new THREE.MeshPhongMaterial( { 
+                    //MeshPhongMaterial is a type of material in THREE.js that simulates the appearance of surfaces with diffuse and specular reflection
+					color: 0x80ee10,
+					shininess: 100,
+					side: THREE.DoubleSide,
+
+					// ***** Clipping setup (material): *****
+					clippingPlanes: [ localPlane ],
+					clipShadows: true,
+
+					alphaToCoverage: true, ////ENABLES THE ALPHA TO COVER THE MATERIAL
+
+				} );
+
+
+
+                ////CREATES A TORUS KNOT GEOMETRY
+				const geometry = new THREE.TorusKnotGeometry( 0.4, 0.08, 95, 20 );
+
+                /////CREATES A MESH WITH THE GEOMETRY AND MATERIAL
+				object = new THREE.Mesh( geometry, material );
+				
+                ////ENABLES SHADOW CASTING
+                object.castShadow = true;
+				scene.add( object );
+
+				//////// CREATE A GROUND MESH WITH SPECIFIC PROPERTIES
+                const ground = new THREE.Mesh(
+					new THREE.PlaneGeometry( 9, 9, 1, 1 ),
+					new THREE.MeshPhongMaterial( { color: 0xa0adaf, shininess: 150 } )
+				);
 
 
 
 
+                //////ROTATES THE GROUND AND ADDS SHADOWS
+				ground.rotation.x = - Math.PI / 2; // rotates X/Y to X/Z
+				ground.receiveShadow = true;
+				scene.add( ground );
+
+
+				///////// CREATE A STATS OBJECT FOR PERFORMANCE MONITORING/////
+
+				stats = new Stats();
+
+                ////////ADD THE STATS DOM ELEMENT TO THE DOCUMENT/////////
+				document.body.appendChild( stats.dom );
+
+
+
+
+				////////// CREATE A WEBGL RENDERER WITH ANTIALIASING/////////
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				
+                
+                ///////ENABLE SHADOW MAPPING FOR THE RENDERER//////
+                renderer.shadowMap.enabled = true;
+
+                //////// SET THE PIXEL RATIO OF THE RENDERER/////
+				renderer.setPixelRatio( window.devicePixelRatio );
+
+                ////// SET THE SIZE OF THE RENDERER//////
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+                //////// ADD A RESIZE EVENT LISTENER///////
+				window.addEventListener( 'resize', onWindowResize );
+
+                ////// ADD THE RENDERER'S DOM ELEMENT TO THE DOCUMENT//////
+				document.body.appendChild( renderer.domElement );
+
+				
+                
+                /////// DEFINES GLOBAL CLIPPING PLANES AND AN EMPTY ARRAY/////
+                // ***** Clipping setup (renderer): *****
+				const globalPlanes = [ globalPlane ],
+					Empty = Object.freeze( [] );
+
+                ///// SET THE RENDERER'S CLIPPING PLANES TO EMPTY INITIALLY/////
+				renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+				renderer.localClippingEnabled = true;
+
+				// Controls
+
+                /////// CREATE ORBITCONTROLS FOR CAMERA MANIPULATION/////
+				const controls = new OrbitControls( camera, renderer.domElement );
+				controls.target.set( 0, 1, 0 );
+				controls.update();
+
+				
 
 
 
 
 
+                
+                
+                ////////////NO COMMENTS HERE////////////////////////////////
+                
+                // GUI
+
+				const gui = new GUI(),
+					props = {
+						alphaToCoverage: true,
+					},
+					folderLocal = gui.addFolder( 'Local Clipping' ),
+					propsLocal = {
+
+						get 'Enabled'() {
+
+							return renderer.localClippingEnabled;
+
+						},
+						set 'Enabled'( v ) {
+
+							renderer.localClippingEnabled = v;
+
+						},
+
+						get 'Shadows'() {
+
+							return material.clipShadows;
+
+						},
+						set 'Shadows'( v ) {
+
+							material.clipShadows = v;
+
+						},
+
+						get 'Plane'() {
+
+							return localPlane.constant;
+
+						},
+						set 'Plane'( v ) {
+
+							localPlane.constant = v;
+
+						}
+
+					},
+					folderGlobal = gui.addFolder( 'Global Clipping' ),
+					propsGlobal = {
+
+						get 'Enabled'() {
+
+							return renderer.clippingPlanes !== Empty;
+
+						},
+						set 'Enabled'( v ) {
+
+							renderer.clippingPlanes = v ? globalPlanes : Empty;
+
+						},
+
+						get 'Plane'() {
+
+							return globalPlane.constant;
+
+						},
+						set 'Plane'( v ) {
+
+							globalPlane.constant = v;
+
+						}
+
+					};
+
+				gui.add( props, 'alphaToCoverage' ).onChange( function ( value ) {
+
+					ground.material.alphaToCoverage = value;
+					ground.material.needsUpdate = true;
+
+					material.alphaToCoverage = value;
+					material.needsUpdate = true;
+
+				} );
+				folderLocal.add( propsLocal, 'Enabled' );
+				folderLocal.add( propsLocal, 'Shadows' );
+				folderLocal.add( propsLocal, 'Plane', 0.3, 1.25 );
+
+				folderGlobal.add( propsGlobal, 'Enabled' );
+				folderGlobal.add( propsGlobal, 'Plane', - 0.4, 3 );
+
+				// Start
+
+				startTime = Date.now();
+
+			}
+
+            ////////////NO COMMENTS HERE////////////////////////////////
+
+
+
+
+
+
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+            //////ANIMATE THE SCENE/////
+			function animate() {
+
+				const currentTime = Date.now();
+				const time = ( currentTime - startTime ) / 1000;
+
+				/////// REQUEST ANIMATION FRAME FOR SMOOTH RENDERING///////
+                requestAnimationFrame( animate );
+
+				object.position.y = 0.8;
+				object.rotation.x = time * 0.5;
+				object.rotation.y = time * 0.2;
+				object.scale.setScalar( Math.cos( time ) * 0.125 + 0.875 );
+
+				stats.begin();
+
+                /////// RENDERS THE SCENE///////
+				renderer.render( scene, camera );
+				stats.end();
+
+			}
