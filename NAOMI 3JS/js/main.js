@@ -12,7 +12,7 @@ import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders
 let scene, camera, renderer, sphere, cowboy, happy;
 let sceneContainer = document.querySelector("#scene-container");
 
-let happyMixer, cowboyMixer; // Separate mixers for each model
+let cowboyMixer; // Separate mixers for each model
 
 function init () {
     scene = new THREE.Scene();
@@ -99,28 +99,24 @@ loader.load('assets/HAPPY.gltf', function (gltf) {
 });
 
 /////COWBOY
-loader.load('assets/RUNNING.gltf', function (gltf) {
+loader.load('assets/COWBOY.gltf', function (gltf) {
     cowboy = gltf.scene;
     scene.add(cowboy);
     cowboy.scale.set(5, 5, 5);
 
-    // Create a mixer for the cowboy model
-    cowboyMixer = new THREE.AnimationMixer(cowboy); // Define cowboyMixer here
+    // COWBOY
+
+let mixer;
+assetLoader.load(monkeyUrl.href, function(gltf) {
+    const model = gltf.scene;
+    scene.add(model);
+    mixer = new THREE.AnimationMixer(model);
     const clips = gltf.animations;
-    
-    const clip = THREE.AnimationClip.findByName(clips, "Armature|mixamo.com|Layer0.001");
+    const clip = THREE.AnimationClip.findByName(clips, 'COWBOY');
+    const action = mixer.clipAction(clip);
+    action.play();
 
-    if (clip) {
-        // Create an action for the clip
-        const action = cowboyMixer.clipAction(clip);
-        
-        // Play the animation
-        action.play();
-    } else {
-        console.error("Animation not found");
-    }
+}, undefined, function(error) {
+    console.error(error)
 });
-
-
-
-
+    
