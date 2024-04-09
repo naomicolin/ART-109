@@ -86,27 +86,32 @@ animate();
 //////ADD ONS / 3D MODEL ////////////////
 const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new GLTFLoader(); // to load 3d models
-
-loader.load('assets/HAPPY.gltf', function (gltf) {
-    happy = gltf.scene;
-    scene.add(happy);
-    happy.scale.set(3, 3, 3);
-});
-
-/////COWBOY
 loader.load('assets/COWBOY.gltf', function (gltf) {
-    cowboy = gltf.scene;
+    const cowboy = gltf.scene;
     scene.add(cowboy);
-    cowboy.scale.set(5, 5, 5);
-
     mixer = new THREE.AnimationMixer(cowboy); 
     const clips = gltf.animations;
-    clips.forEach(function (clip) {
-        const action = mixer.clipAction(clip); 
-        action.play(); 
-    });
+    const clip = THREE.AnimationClip.findByName(clips, 'COWBOY');
+    if (clip) {
+        const action = mixer.clipAction(clip);
+        action.play();
+    } else {
+        console.error('Animation clip not found in the loaded model:', gltf);
+    }
 }, undefined, function (error) {
-    console.error(error);
+    console.error('Error loading the cowboy model:', error);
 });
+
+    
+
+
+
+
+
+
+
+
+
+
 
 
