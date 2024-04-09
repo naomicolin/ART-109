@@ -8,78 +8,76 @@ import * as THREE from 'three';
 import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
 
-
-
-
 ///////CREATE SCENE //////////////////
-let scene, camera, renderer, sphere, cube;
+let scene, camera, renderer, sphere, cowboy, happy;
+let sceneContainer = document.querySelector("#scene-container");
+
+let happyMixer, cowboyMixer; // Separate mixers for each model
 
 function init () {
     scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 1000);
 
-    const light = new THREE.DirectionalLight(0xffffff, 3);
-    light.position.set(1, 1, 5);
-    scene.add(light);
+    renderer = new THREE.WebGLRenderer({ antialias: true}); ///THE VIEWPORT
+    renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
+    sceneContainer.appendChild(renderer.domElement);
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    /////ADDING LIGHTENING RIGHT
+    const lightRight = new THREE.DirectionalLight(0xFF69B4, 3);
+    lightRight.position.set(3, 4, 5);
+    scene.add(lightRight);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    const helperRight = new THREE.DirectionalLight(lightRight, 5);
+    scene.add(helperRight);
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    /////ADDING LIGHTENING LEFT
+    const lightLeft = new THREE.DirectionalLight(0xFF69B4, 3);
+    lightLeft.position.set(3, 4, 5);
+    scene.add(lightLeft);
 
-
-
+    const helperLeft = new THREE.DirectionalLight(lightLeft, 5);
+    scene.add(helperLeft);
 
     //////SPHERE CODE ////////////////
     const sphereGeometry = new THREE.SphereGeometry(15, 32, 16);
-    const sphereTexture = new THREE.TextureLoader().load('textures/lava.webp');
+    const sphereTexture = new THREE.TextureLoader().load('textures/pink.jpg');
     const sphereMaterial = new THREE.MeshBasicMaterial({ map: sphereTexture });
     sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
-    sphere.position.x = -20; // Adjust x 
-    ////////////////////////////////////////////////////////////////
-
-
-
-   //////// CUBE CODE ////////////////////////////////
-    const cubeGeometry = new THREE.BoxGeometry(30, 30, 30);
-    const cubeTexture = new THREE.TextureLoader().load('textures/denim.jpg');
-    const cubeMaterial = new THREE.MeshBasicMaterial({ map: cubeTexture });
-    cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    scene.add(cube);
-    cube.position.y = 5; // Adjust 
-    cube.position.x = 20;
-
-    ////////////////////////////////////////////////////////////////
-
-
+    // sphere.position.x = -20; // Adjust x 
 
     /////////CAMERA POSITION////////////////
     camera.position.z = 50;
-
-
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
-    sphere.rotation.x += 0.02;
-    sphere.rotation.y += 0.02;
+    sphere.rotation.x += 0.007;
+    sphere.rotation.y += 0.007;
 
-    cube.rotation.x += 0.02;
-    cube.rotation.y += 0.02;
+    sphere.position.x = Math.sin(Date.now() / 2000) * 4;
+    sphere.position.y = Math.sin(Date.now() / 4000) * 4;
+    sphere.position.z = Math.sin(Date.now() / 5000) * 4;
+
+    if(happy) {
+        happy.rotation.x += 0.007;
+        happy.rotation.y += 0.007;
+        happy.position.y = Math.sin(Date.now() / 500) * .5;
+    }
+
+    if(cowboy) {
+        cowboy.position.y = -25;
+        cowboy.position.x = -25;
+    }
 
     renderer.render(scene, camera);
 }
 
-
-
-
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = sceneContainer.clientWidth / sceneContainer.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
 }
 
 window.addEventListener('resize', onWindowResize, false);
@@ -87,23 +85,42 @@ window.addEventListener('resize', onWindowResize, false);
 init();
 animate();
 
-
 //////ADD ONS / 3D MODEL ////////////////
 const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new GLTFLoader(); // to load 3d models
 
 loader.load('assets/HAPPY.gltf', function (gltf) {
-    const happy = gltf.scene;
+    happy = gltf.scene;
     scene.add(happy);
+    happy.scale.set(3, 3, 3);
+
 
    
-    happy.scale.set(2, 2, 2); //
-    happy.position.z = 20; // Adjust x 
-    happy.position.x = -20; // Adjust x 
-    happy.position.y = -15; // Adjust x 
-    camera.position.y += cameraY * 2; // adjust multiplier as needed
-    
-
-
-
 });
+
+/////COWBOY
+loader.load('assets/RUNNING.gltf', function (gltf) {
+    cowboy = gltf.scene;
+    scene.add(cowboy);
+    cowboy.scale.set(5, 5, 5);
+
+    // Create a mixer for the cowboy model
+    cowboyMixer = new THREE.AnimationMixer(cowboy); // Define cowboyMixer here
+    const clips = gltf.animations;
+    
+    const clip = THREE.AnimationClip.findByName(clips, "Armature|mixamo.com|Layer0.001");
+
+    if (clip) {
+        // Create an action for the clip
+        const action = cowboyMixer.clipAction(clip);
+        
+        // Play the animation
+        action.play();
+    } else {
+        console.error("Animation not found");
+    }
+});
+
+
+
+
