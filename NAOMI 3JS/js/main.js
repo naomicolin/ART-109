@@ -9,13 +9,17 @@ import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/cont
 import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
 
 ///////CREATE SCENE //////////////////
-let scene, camera, renderer, sphere, cowboy, happy;
+let scene, camera, renderer, sphere, cowboy, happy, clock;
 let sceneContainer = document.querySelector("#scene-container");
 
 let mixer;
+let actionCowboy; // Define actionCowboy variable
+
+// const clock = new THREE.Clock();
 
 function init() {
     scene = new THREE.Scene();
+    clock = new THREE.Clock();
     camera = new THREE.PerspectiveCamera(75, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 1000);
 
     renderer = new THREE.WebGLRenderer({ antialias: true }); ///THE VIEWPORT
@@ -44,8 +48,21 @@ function init() {
     camera.position.z = 50;
 }
 
+////EVENT LISTENER //////
+document.querySelector("header").addEventListener("mousedown", () => {
+    actionCowboy.play();
+    console.log("mousedown");
+});
+
 function animate() {
     requestAnimationFrame(animate);
+
+    const delta = clock.getDelta();
+
+    // Update the mixer with the delta time
+    if (mixer) {
+        mixer.update(delta);
+    }
 
     sphere.rotation.x += 0.007;
     sphere.rotation.y += 0.007;
@@ -66,7 +83,7 @@ function animate() {
     }
 
     if (mixer) {
-        mixer.update(); // Update animations
+        mixer.update(clock.getDelta()); // Update animations
     }
 
     renderer.render(scene, camera);
@@ -86,32 +103,43 @@ animate();
 //////ADD ONS / 3D MODEL ////////////////
 const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new GLTFLoader(); // to load 3d models
-loader.load('assets/COWBOY.gltf', function (gltf) {
-    const cowboy = gltf.scene;
-    scene.add(cowboy);
-    mixer = new THREE.AnimationMixer(cowboy); 
-    const clips = gltf.animations;
-    const clip = THREE.AnimationClip.findByName(clips, 'COWBOY');
-    if (clip) {
-        const action = mixer.clipAction(clip);
-        action.play();
-    } else {
-        console.error('Animation clip not found in the loaded model:', gltf);
-    }
-}, undefined, function (error) {
-    console.error('Error loading the cowboy model:', error);
+
+loader.load('assets/HAPPY.gltf', function (gltf) {
+    happy = gltf.scene;
+    scene.add(happy);
+    happy.scale.set(3, 3, 3);
 });
 
+/////COWBOY
+loader.load('assets/COWBOY.gltf', function (gltf) {
+    cowboy = gltf.scene;
+    console.log(cowboy);
+    scene.add(cowboy);
+    cowboy.scale.set(5, 5, 5);
+
+    mixer = new THREE.AnimationMixer(cowboy); 
+    const clips = gltf.animations;
     
+    clips.forEach(function (clip) {
+        // console.log(clip);
+        actionCowboy = mixer.clipAction(clip); // Assign actionCowboy
+        actionCowboy.play(); // Start animation
+        console.log(actionCowboy);
+    });
+}, undefined, function (error) {
+    console.error(error);
+});
 
 
-
-
-
-
-
-
-
-
+document.querySelector("header").addEventListener("mousedown", () => {
+    if (actionCowboy) {
+        if (actionCowboy.paused) {
+            actionCowboy.paused = false; // Resume the animation if it's paused
+        } else {
+            actionCowboy.paused = true; // Pause the animation if it's running
+        }
+    }
+    console.log("mousedown");
+});
 
 
