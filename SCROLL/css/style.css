@@ -1,0 +1,12 @@
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+header {
+    position: absolute;
+    color: white;
+    font-size: 50px;
+    right: 500px;
+}
