@@ -28,28 +28,90 @@ scene.add(directionalLight);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// Add axes helper to visualize x, y, and z coordinates
-const axesHelper = new THREE.AxesHelper(16);
-scene.add(axesHelper);
-
 // ~~~~~~~~~~~~~~~~Position Camera~~~~~~~~~~~~~~~~
 camera.position.z = 50;
 
+// DEFINE UNIFORM DATA
+const uniformData = {
+    u_time: {
+        type: 'f',
+        value: 0, // Initialize with default value
+    },
+};
+
+function render() {
+    uniformData.u_time.value += 0.1; // Increment time value
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+}
+
 // ~~~~~~~~~~ Create Geometry ~~~~~~~~~~~~~~~~
 
-const boxGeometry = new THREE.BoxGeometry(16, 16, 16, 32, 32, 32); // with 32 segmented faces along each side of the box
-
+const boxGeometry = new THREE.BoxGeometry(10, 10, 10, 20, 20, 20); // with 32 segmented faces along each side of the box
 const boxMaterial = new THREE.ShaderMaterial({
     wireframe: true,
+    uniforms: uniformData,
     vertexShader: `
+        varying vec3 pos;
+        uniform float u_time;
+
         void main() {
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            // vec4 mvPosition = modelViewMatrix * vec4(position.x, position.y, position.z + sin(u_time), 1.0);
+            // gl_Position = projectionMatrix * mvPosition;
+
+            /////OR 2D SINE WAVE
+            // vec4 mvPosition = modelViewMatrix * vec4(position.x, sin(position.z + u_time), position.z, 1.0);
+            // gl_Position = projectionMatrix * mvPosition;
+
+            /////OR WAVEY BOX
+            // vec4 mvPosition = modelViewMatrix * vec4(position.x, sin(position.z + u_time) + position.y, position.z, 1.0);
+            // gl_Position = projectionMatrix * mvPosition;
+
+            /////ADDING TIME WAVEY BOX
+            // vec4 mvPosition = modelViewMatrix * vec4(position.x, sin((position.z)/2.0 + u_time) + position.y, position.z, 1.0);
+            // gl_Position = projectionMatrix * mvPosition;
+
+
+            /////ADDING TIME WAVEY BOX + AMP
+            vec4 mvPosition = modelViewMatrix * vec4(position.x, 4.0*sin((position.z)/2.0 + u_time) + position.y, position.z, 1.0);
             gl_Position = projectionMatrix * mvPosition;
+            pos = position;
+
+
+
+
         }
     `,
-    fragmentShader: `
+    fragmentShader:
+     `
+
+     varying vec3 pos;
+     uniform float u_time;
+
         void main() {
-            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            // gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+            // gl_FragColor = vec4(abs(sin(u_time)), 0.0, 0.0, 1.0);
+
+
+            /////NEWWWWW
+            // if (pos.z > 0.0) {
+            //     gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            // } else {
+            //     gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+            // }
+
+
+            /////NEWWWWW WITH TIME
+            if (pos.z > 0.0) {
+                gl_FragColor = vec4(abs(sin(u_time)), 0.0, 0.0, 1.0);
+            } else {
+                gl_FragColor = vec4(0.0, abs(cos(u_time)), 0.0, 1.0);
+            }
+
+
+
+
         }
     `,
 }); 
@@ -59,13 +121,4 @@ scene.add(cube);
 
 // ~~~~~~~~~~~~~~~~ Animation Loop ~~~~~~~~~~~~~~~~
 
-function animate() {
-    requestAnimationFrame(animate);
-
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-
-    renderer.render(scene, camera);
-}
-
-animate();
+render(); // Start the rendering loop
